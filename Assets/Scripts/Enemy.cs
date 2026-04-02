@@ -17,15 +17,19 @@ public class Enemy : LivingEntity
     public ParticleSystem hitEffect;
     public Collider enemyCollider;
     public LayerMask targetLayer;
+    public EnemyData enemyData;
+    public EnemySpawner spawner;
 
-    public float traceDistance = 10f;
+    public float traceDistance = 100f;
     public float attackInterval = 0.5f;
 
     private Status currentStatus;
     private NavMeshAgent agent;
     private Animator enemyAnimator;
     private float lastAttackTime;
+
     private float damage;
+
 
     public Status CurrentStatus
     {
@@ -72,6 +76,10 @@ public class Enemy : LivingEntity
         base.OnEnable();
 
         agent.enabled = true;
+
+        startingHealth = enemyData.maxHealth;
+        damage = enemyData.damage;
+        agent.speed = enemyData.moveSpeed;
         
         if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 10f, NavMesh.AllAreas))
         {
@@ -106,7 +114,18 @@ public class Enemy : LivingEntity
 
     private  void UpdateIdle()
     {
-        if (target != null && Vector3.Distance(target.position, transform.position) <  traceDistance)
+        if (target == null)
+        {
+            target = FindTarget(traceDistance);
+
+            if (target != null)
+            {
+                CurrentStatus = Status.Move;
+            }
+            return;
+        }
+
+        if ( Vector3.Distance(target.position, transform.position) <  traceDistance)
         {
             CurrentStatus = Status.Move;
             return;
@@ -117,6 +136,12 @@ public class Enemy : LivingEntity
 
     private void UpdateMove()
     {
+        Transform foundTarget = FindTarget(traceDistance);
+        if (foundTarget != null)
+        {
+            target = foundTarget;
+        }
+
         if (target != null)
         {
             var find = hitbox.Colliders.Find(x => x.transform == target);
@@ -140,9 +165,10 @@ public class Enemy : LivingEntity
 
     private void UpdateAttack()
     {
+        //Debug.Log("Attack 상태");
         if (target == null)
         {
-            CurrentStatus = Status.Move;
+            CurrentStatus = Status.Idle;
             return;
         }
 
@@ -161,12 +187,12 @@ public class Enemy : LivingEntity
         {
             lastAttackTime = Time.time;
 
-            var LivingEntity = target.GetComponent<LivingEntity>();
+            var LivingEntity = target.GetComponentInParent<LivingEntity>();
             if (LivingEntity != null)
             {
                 if (!LivingEntity.isDead)
                 {
-                    LivingEntity.OnDamage(10f, transform.position, -transform.forward);
+                    LivingEntity.OnDamage(damage, transform.position, -transform.forward);
                 }
             }
         }
@@ -174,33 +200,33 @@ public class Enemy : LivingEntity
 
     public override void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
-        Debug.Log("Enemy OnDamage 호출됨");
-
-        if (isDead)
-            return;
-
         base.OnDamage(damage, hitPoint, hitNormal);
-
-        if (hitEffect == null)
-        {
-            Debug.LogError("hitEffect가 연결되지 않았습니다.");
-            return;
-        }
 
         hitEffect.transform.position = hitPoint;
         hitEffect.transform.forward = hitNormal;
         hitEffect.Play();
 
+        if (Health <= 0f)
+        {
+            CurrentStatus = Status.Die;
+        }
+
 
     }
 
+
     private void UpdateDie()
     {
-        if (isDead)
+        if (!isDead)
             return;
 
-        CurrentStatus = Status.Die;
-        Destroy(gameObject);
+        if (spawner != null)
+        {
+            spawner.RemoveEnemy(this);
+        }
+
+
+        Destroy(gameObject, 2f);
 
 
     }

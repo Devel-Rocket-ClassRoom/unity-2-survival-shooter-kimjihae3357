@@ -48,7 +48,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -84,7 +84,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400074, guid: be66986effd141b4992d2d78be127139, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.1895
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400074, guid: be66986effd141b4992d2d78be127139, type: 3}
       propertyPath: m_LocalPosition.z
@@ -184,14 +184,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   startingHealth: 100
-  target: {fileID: 0}
+  target: {fileID: 5121290269437447566, guid: aa0a71e45689c9a4e8246151e663b492, type: 3}
   hitbox: {fileID: 1030320310017563476}
   hitEffect: {fileID: 6388201447383131235}
   enemyCollider: {fileID: 4449504442615090598}
   targetLayer:
     serializedVersion: 2
     m_Bits: 64
-  traceDistance: 10
+  enemyData: {fileID: 11400000, guid: 60792abeba211d64bbbaae1d4f0103fe, type: 2}
+  traceDistance: 30
   attackInterval: 0.5
 --- !u!1001 &6388201447397686179
 PrefabInstance:
@@ -207,15 +208,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ef39ae7291c751249b296f00bf6fb042, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.001703918
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ef39ae7291c751249b296f00bf6fb042, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.1895
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ef39ae7291c751249b296f00bf6fb042, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.663906
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ef39ae7291c751249b296f00bf6fb042, type: 3}
       propertyPath: m_LocalRotation.w

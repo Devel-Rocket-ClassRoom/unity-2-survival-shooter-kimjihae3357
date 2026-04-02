@@ -9,18 +9,12 @@ public class Gun : MonoBehaviour
     public GunData gunData;
     public float fireDistance = 50f;
 
+    private float fireRate = 0.2f;
+    private float lastFireTime;
+
     private LineRenderer bulletLineEffect;
     private Coroutine _coShot;
 
-
-    public enum Stats
-    {
-        Ready,
-        Empty,
-        Reloading
-    }
-
-    public Stats State {  get; private set; }
 
     private void Awake()
     {
@@ -29,9 +23,13 @@ public class Gun : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
-            Fire();
+            if (Time.time > lastFireTime + fireRate)
+            {
+                Fire();
+                lastFireTime = Time.time;
+            }
         }
     }
 

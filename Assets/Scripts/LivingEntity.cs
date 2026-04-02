@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LivingEntity : MonoBehaviour
@@ -16,17 +17,25 @@ public class LivingEntity : MonoBehaviour
 
     public virtual void OnDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
+        if (isDead)
+            return;
 
         Health -= damage;
-        if (Health < 0)
+
+        if (Health <= 0f)
         {
-            Health = 0;
+            isDead = true;
         }
     }
 
-    public 
+    public virtual void Die()
+    {
 
-    
+        isDead = true;
+
+    }
+
+
     void Start()
     {
         
